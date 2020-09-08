@@ -1,0 +1,8 @@
+---
+- name: create cgroup
+  hosts: localhost
+  gather_facts: false
+  become: true
+  tasks:
+    - name: create cgroup ex447_stats
+      shell: cgcreate -a ansible:ansible -t ansible:ansible -g cpuacct,memory,pids:ex447_stats

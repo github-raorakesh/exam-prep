@@ -52,6 +52,7 @@
         comment: "{{ item.first }} {{ item.middle }} {{ item.name }}"
         password: "{{ credentials[0].split()[1] | password_hash('sha512', credentials[1].split()[1]) }}"
         update_password: on_create
+        state: present
       loop: "{{ users }}"
       become: true
       tags:
