@@ -1,0 +1,37 @@
+---
+- name: create users based on list
+  hosts: all
+  vars:
+    users:
+      - name: Bach
+        first: Johann
+        middle: Sebastian
+        UID: 2001
+      - name: Mozart
+        first: Wolfgang
+        middle: Amadeus
+        UID: 2002
+     - name: Haydn
+       first: Franz
+       middle: Joseph
+
+  tasks:
+    - name: create PW files
+      set_fact:
+        temp_password: "{{ lookup('template', 'password_file_template.j2') }}"
+      loop: "{{ user }}"
+      tags:
+        - never
+        - password
+
+    - name: create users
+      user:
+        name: "{{ item.name }}"
+        UID: "{{ item.UID }}"
+        comment: "{{ item.first }} + {{ item.middle }} + {{ item.name }}"
+        password: "{{ password | password_hash('sha512', salt) }}"
+        update_password: on_create
+      loop: "{{ users }}"
+      tags:
+        - never
+        - user
