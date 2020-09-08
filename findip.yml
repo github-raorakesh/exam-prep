@@ -1,0 +1,8 @@
+---
+- name: find IPs in files, extract them and store them as lists in new files
+  hosts: localhost
+  become: false
+  tasks:
+    - name: find IPs in files
+      vars:
+        
