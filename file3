@@ -1,15 +1,6 @@
-# These values are valid IP addresses or network ranges
-'192.168.0.1'       -> 192.168.0.1
-'192.168.32.0/24'   -> 192.168.32.0/24
-'fe80::100/10'      -> fe80::100/10
-45443646733         -> ::a:94a7:50d
-'523454/24'         -> 0.7.252.190/24
-
-# Values that are not valid IP addresses or network ranges
-'localhost'         -> False
-True                -> False
-'space bar'         -> False
-False               -> False
-''                  -> False
-':'                 -> False
-'fe80:/10'          -> False
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+192.168.178.222 server2.ralf-example.com server2:192.168.178.222
+192.168.178.223 server3.ralf-example.com server3 ansible3
+192.168.178.224 server4.ralf-example.com server4 ansible4 192.168.178.224 
+192.168.178.230 awx-master.ralf.example.com awxhost ansible5

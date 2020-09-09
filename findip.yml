@@ -1,8 +1,71 @@
 ---
 - name: find IPs in files, extract them and store them as lists in new files
   hosts: localhost
+  gather_facts: false
   become: false
+  vars:
+    list1: []
+    list2: []
+    list3: []
+  vars_files:
+     - filelist
   tasks:
-    - name: find IPs in files
+    - name: Lookup file content from all files
       vars:
-        
+        filecontentlist: "{{ query('lines', 'cat ' + item) }}"
+      debug: 
+        msg: "{{ filecontentlist }}"
+      loop: "{{ files }}"
+      register: testvar
+       
+    - name: display filecontentlist in new task
+      debug:
+        msg:
+          - "{{ testvar['results'][0]['msg'] }}" #| regex_findall('\\b(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\b') }}"
+          - "{{ testvar['results'][1]['msg'] }}"
+          - "{{ testvar['results'][2]['msg'] }}"
+
+    - name: test file1
+      set_fact:
+        list1: "{{ list1 }} + [{{ item | string | regex_findall('\\b(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\b') }}]" 
+      loop: "{{ testvar['results'][0]['msg'] }}"
+
+    - name: print list1
+      debug:
+        msg: 
+          - "IP ADDRESS={{ list1 | default('NOT DEFINED') | flatten | unique | join(', ') }}"
+          - "{{ list1 }}"
+
+    - name: test file2
+      set_fact:
+        list2: "{{ list2 }} + [{{ item | string | regex_findall('\\b(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\b') }}]" 
+      loop: "{{ testvar['results'][1]['msg'] }}"
+
+    - name: print list2
+      debug:
+        msg: "IP ADDRESS={{ list2 | flatten | unique | join(', ')}}"
+
+
+    - name: test file3
+      set_fact:
+        list3: "{{ list3 }} + [{{ item | string | regex_findall('\\b(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\b') }}]" 
+      loop: "{{ testvar['results'][2]['msg'] }}"
+
+    - name: print list3
+      debug:
+        msg: "IP ADDRESS={{ list3 | flatten | unique | join(', ')}}"
+
+            #    - name: check content from file1
+            #debug:
+            #msg: "{{ item | regex_findall('\\b(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\b') }}"
+            #loop: "{{ testvar['results'][0]['msg'] }}"
+
+            #    - name: check content from file2
+            #debug:
+            # msg: "{{ item | regex_findall('\\b(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\b') }}"
+            # loop: "{{ testvar['results'][1]['msg'] }}"
+
+            #    - name: check content from file3
+            # debug:
+            # msg: "{{ item | regex_findall('\\b(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\b') }}"
+            # loop: "{{ testvar['results'][2]['msg'] }}"
