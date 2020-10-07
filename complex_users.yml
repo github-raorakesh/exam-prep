@@ -20,7 +20,11 @@
   tasks:
     - name: create PW files
       vars:
+        ## reference: https://docs.ansible.com/ansible/2.9/plugins/lookup/password.html
         password: "{{ lookup('password', '/dev/null length=6 chars=digits') }}"
+        ##reference: https://docs.ansible.com/ansible/2.9/user_guide/playbooks_filters.html#hashing-filters
+        ##reference: https://ansibledaily.com/idempotent-random-number/
+        salt: "{{ 65534 | random(seed=inventory_hostname) | string }}"
       template:
         src: password_file_template.j2 
         dest: "credentials/password-{{ item.name | lower }}"
@@ -34,10 +38,10 @@
         credentials: "{{ query('lines', 'cat credentials/password-' + item.name | lower) }}"
       debug:
         msg: 
-        #- "password is: {{ credentials[0].split()[1] }}"
-        # - "salt is: {{ credentials[1].split()[1] }}"
-          - "password is: {{ credentials[0] | replace('password: ', '') }}"
-          - "salt is: {{ credentials[1] | replace('salt: ', '') }}"
+          - "split password is: {{ credentials[0].split()[1] }}"
+          - "split salt is: {{ credentials[1].split()[1] }}"
+          - "replace password is: {{ credentials[0] | replace('password: ', '') }}"
+          - "replace salt is: {{ credentials[1] | replace('salt: ', '') }}"
       loop: "{{ users }}"
       tags:
         - never
