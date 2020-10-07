@@ -37,6 +37,8 @@
       vars:
         credentials: "{{ query('lines', 'cat credentials/password-' + item.name | lower) }}"
       debug:
+        ## reference: https://www.mydailytutorials.com/how-to-split-strings-and-join-them-in-a%E2%80%8Bnsibl%E2%80%8Be/
+        ## reference: https://medium.com/@toja/ansible-tip-split-a-string-on-a-delimiter-888ff937fc3e
         msg: 
           - "split password is: {{ credentials[0].split()[1] }}"
           - "split salt is: {{ credentials[1].split()[1] }}"
