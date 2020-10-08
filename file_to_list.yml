@@ -1,0 +1,32 @@
+---
+- name: test transforming txt file content to list for processing
+  hosts: localhost
+  gather_facts: false
+  become: false
+  vars_files:
+    - filelist
+  tasks:
+    - name: load text from file and transform it
+      vars:
+        my_txt: "{{ query('lines', 'cat file1') }}"
+      debug:
+        var: my_txt
+
+    - name: load text from file and transform it
+      vars:
+        my_txt: "{{ lookup('file', item).split() }}"
+        my_ips: "{{ lookup('file', item).split() | ipv4 }}"
+        my_ips2: "{{ my_ips | default('no IP found', true) }}"
+      debug:
+        msg:
+          - "{{ my_txt }}"
+          - "{{ lookup('template', 'ip_template_v2.j2') }}"
+      loop: "{{ files }}"
+
+    - name: load text from file and transform it and write to file
+      vars:
+        my_ips: "{{ lookup('file', item).split() | ipv4 }}"
+      template:
+        src: "ip_template.j2"
+        dest: "{{ item }}.ip"
+      loop: "{{ files }}"
