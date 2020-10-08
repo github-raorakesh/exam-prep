@@ -30,3 +30,5 @@
         src: "ip_template.j2"
         dest: "{{ item }}.ip"
       loop: "{{ files }}"
+      ## use loop: "{{ query('lines', 'cat fileslist') }}" if vars_files can not be used
+      ## could also use copy module with content: "{{ lookup('template', 'ip_template_v2.j2') }}"
