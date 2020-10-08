@@ -15,7 +15,7 @@
     - name: load text from file and transform it
       vars:
         my_txt: "{{ lookup('file', item).split() }}"
-        my_ips: "{{ lookup('file', item).split() | ipv4 }}"
+        my_ips: "{{ lookup('file', item).split() | ipv4 | unique }}"
         my_ips2: "{{ my_ips | default('no IP found', true) }}"
       debug:
         msg:
@@ -25,7 +25,7 @@
 
     - name: load text from file and transform it and write to file
       vars:
-        my_ips: "{{ lookup('file', item).split() | ipv4 }}"
+        my_ips: "{{ lookup('file', item).split() | ipv4 | unique }}"
       template:
         src: "ip_template.j2"
         dest: "{{ item }}.ip"
