@@ -29,3 +29,6 @@
       loop: "{{ files }}"
       ## use loop: "{{ query('lines', 'cat fileslist') }}" if vars_files can not be used
       ## could also use copy module with content: "{{ lookup('template', 'ip_template_v2.j2') }}"
+      ## alternatives to split strings:
+      ## my_list="{{ (myString | regex_replace(':|.', ':')).split(':') }}"
+      ## mystr="{{ myString | regex_findall('([^:.]+)') }} "
