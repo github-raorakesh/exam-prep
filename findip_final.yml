@@ -1,0 +1,21 @@
+---
+- name: test transforming txt file content to list for processing
+  hosts: localhost
+  gather_facts: false
+  become: false
+  ##vars_files:
+  ##  - filelist
+  tasks:
+
+    - name: load text from file and transform it and write to file
+      vars:
+        my_ips: "{{ lookup('file', item) }}"
+        my_ips1: "{{ lookup('template', 'temp_template.j2').split() | ipaddr() | unique }}"
+        my_ips2: "{{ my_ips1 | default('no IP found', true) }}"
+      template:
+        src: "ip_template.j2"
+        dest: "{{ item }}.ip"
+      ##loop: "{{ files }}"
+      loop: "{{ query('lines', 'cat filelist2') }}"
+      ## use loop: "{{ query('lines', 'cat fileslist') }}" if vars_files can not be used
+      ## could also use copy module with content: "{{ lookup('template', 'ip_template_v2.j2') }}"

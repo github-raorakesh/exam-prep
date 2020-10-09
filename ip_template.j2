@@ -1,1 +1,1 @@
-IP Address = {{ my_ips | default('no IP found', true) | replace('[', '') | replace(']', '') | replace('\'', '') }}
+IP Address = {{ my_ips2 | regex_replace("\\[|\\]|\\'") }}
