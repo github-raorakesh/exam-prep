@@ -1,0 +1,18 @@
+---
+- name: playbook to test tagging
+  hosts: localhost
+  become: false
+  gather_facts: false
+  tasks:
+    - name: task alpha
+      debug:
+        msg: "This is task alpha"
+      tags:
+        - never
+        - alpha
+    - name: task beta
+      debug:
+        msg: "This is task beta"
+      tags:
+        - never
+        - beta
